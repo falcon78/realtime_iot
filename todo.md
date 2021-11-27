@@ -1,0 +1,5 @@
+- [ ] Design Table
+- [ ] Implement auth
+- [ ] Add fetch endpoints
+- [ ] Add Websocket
+- [ ] Revoke tokens periodically
