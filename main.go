@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/subtle"
 	"os"
 
 	"github.com/falcon78/realtime_iot/pkg/utils"
@@ -8,9 +9,10 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
-var MigrationDir = "file://../../migrations"
+var MigrationDir = "file://migrations"
 
 func main() {
 
@@ -31,9 +33,21 @@ func main() {
 	app := newApp(db)
 
 	e := echo.New()
+	e.Use(middleware.Gzip())
+	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+		if subtle.ConstantTimeCompare([]byte(username), []byte("falcon")) == 1 &&
+			subtle.ConstantTimeCompare([]byte(password), []byte("secret")) == 1 {
+			return true, nil
+		}
+		return false, nil
+	}))
 
 	// Routes
-	e.GET("/", app.home)
+	e.POST("/api/getRecords", app.getRecords)
+
+	// Serve static assets for frontend
+	e.Static("/assets", "static/assets")
+	e.File("*", "static/index.html")
 
 	// Start server
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
