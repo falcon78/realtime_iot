@@ -15,7 +15,6 @@ import (
 var MigrationDir = "file://migrations"
 
 func main() {
-
 	db, err := utils.GetDb()
 	if err != nil {
 		panic(err)
@@ -34,6 +33,8 @@ func main() {
 
 	e := echo.New()
 	e.Use(middleware.Gzip())
+
+	// TODO: import basic auth credentials from env
 	e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
 		if subtle.ConstantTimeCompare([]byte(username), []byte("falcon")) == 1 &&
 			subtle.ConstantTimeCompare([]byte(password), []byte("secret")) == 1 {
