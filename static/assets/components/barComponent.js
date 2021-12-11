@@ -42,7 +42,7 @@ export default {
             4: [],
         }
         const colors = ['rgba(226,135,67, 0.9)', 'rgba(42,157,143,0.9)', 'rgba(247,37,133,0.9)', 'rgba(74,78,105,0.9)']
-        for (const res of response) {
+        for (const res of response.records) {
             channelData[0].push(new Date(res.timestamp))
             channelData[1].push(res.channelOne)
             channelData[2].push(res.channelTwo)
@@ -70,17 +70,27 @@ export default {
             },
             options: {
                 responsive: true,
-                normalized: true,
+                normalized: false,
                 lineTension: 1,
                 scales: {
-                    yAxes: [
-                        {
-                            ticks: {
-                                beginAtZero: true,
-                                padding: 0
-                            }
+                    // yAxes: [
+                    //     {
+                    //         ticks: {
+                    //             beginAtZero: true,
+                    //             padding: 0
+                    //         }
+                    //     }
+                    // ],
+                    yAxes: [{
+                        display: true,
+                        ticks: {
+                            beginAtZero: true,
+                            steps: 10,
+                            stepValue: 5,
+                            max: Math.ceil(response.max),
+                            min: Math.ceil(response.min)
                         }
-                    ],
+                    }],
                     xAxes: [{
                         type: 'time',
                         time: {
@@ -88,7 +98,7 @@ export default {
                             // round: 'day'
                             tooltipFormat: 'YYYY-MM-DD HH:mm',
                             displayFormats: {
-                                millisecond: 'HH:mm:ss.SSS',
+                                millisecond: 'HH:mm:ss',
                                 second: 'HH:mm:ss',
                                 minute: 'HH:mm',
                                 hour: 'HH'
