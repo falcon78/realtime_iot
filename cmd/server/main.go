@@ -1,10 +1,8 @@
 package main
 
 import (
-	"crypto/subtle"
 	"github.com/falcon78/realtime_iot/pkg/realtime_update"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/falcon78/realtime_iot/pkg/utils"
@@ -35,42 +33,23 @@ func main() {
 	app := newApp(db, realtime_update.New())
 
 	e := echo.New()
-	//e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
-	//	fmt.Println(string(reqBody))
-	//	fmt.Println(string(resBody))
-	//}))
-	protected := e.Group("")
-	protected.Use(middleware.Gzip())
+	e.Use()
+	e.Use(middleware.Gzip())
 
-	user := strings.TrimSpace(os.Getenv("BASIC_AUTH_USER"))
-	if user == "" || len(user) < 6 {
-		panic("basic auth user name must be longer than 6 characters")
-	}
-	pass := strings.TrimSpace(os.Getenv("BASIC_AUTH_PASS"))
-	if pass == "" || len(pass) < 6 {
-		panic("basic auth password must be longer than 6 characters")
-	}
-	protected.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
-		if subtle.ConstantTimeCompare([]byte(username), []byte(user)) == 1 &&
-			subtle.ConstantTimeCompare([]byte(password), []byte(pass)) == 1 {
-			return true, nil
-		}
-		return false, nil
-	}))
+	// Api Routes
+	e.GET("/api/channels", app.getChannels, basicAuth())
+	e.POST("/api/channel/create/:channelName", app.createChannel, basicAuth())
+	e.DELETE("/api/channel/delete/:channelId", app.deleteChannel, basicAuth())
+	e.GET("/api/records/:channelId", app.getLatestRecords, basicAuth())
+	// don't use basic auth for this route
+	e.POST("/api/record", app.postRecord, bodyDump())
 
-	// Routes
-	protected.GET("/api/channels", app.getChannels)
-	protected.POST("/api/channel/create/:channelName", app.createChannel)
-	protected.DELETE("/api/channel/delete/:channelId", app.deleteChannel)
-	protected.GET("/api/records/:channelId", app.getLatestRecords)
-	e.POST("/api/record", app.postRecord)
-
-	// Websocket
-	protected.GET("/ws/:accessKey", app.handleWebsocket)
+	// websocket
+	e.GET("/ws/:accessKey", app.handleWebsocket)
 
 	// Serve static assets for frontend
-	protected.Static("/assets", "../../static/assets")
-	e.File("*", "../../static/index.html")
+	e.Static("/assets", "../../static/assets")
+	e.File("/*", "../../static/index.html")
 
 	timer := time.NewTicker(time.Second)
 

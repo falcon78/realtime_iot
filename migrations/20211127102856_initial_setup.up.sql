@@ -12,5 +12,6 @@ create table records
     channel_one   float DEFAULT 0,
     channel_two   float DEFAULT 0,
     channel_three float DEFAULT 0,
-    channel_four  float DEFAULT 0
+    channel_four  float DEFAULT 0,
+    timestamp     timestamp                    not null
 );

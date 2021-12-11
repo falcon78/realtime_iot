@@ -1,17 +1,3 @@
-let websocketHost = window.location.hostname
-if (window.location.port.length > 0) {
-    websocketHost += ":" + window.location.port
-}
-
-const socket = new WebSocket(`ws://${websocketHost}/ws/test`)
-socket.addEventListener('open', function (event) {
-    console.log("socket open")
-})
-socket.addEventListener('message', async (event) => {
-    const data = JSON.parse(await event.data.text())
-    console.log(data)
-})
-
 export default {
     name: 'Home',
 
@@ -98,7 +84,9 @@ export default {
         <tbody>
         <tr v-for="channel in channels" v-bind:key="channel.id">
           <td>
-            <a v-bind:href="'/graph' + '?channelId=' + channel.id">{{channel.name}}</a>
+            <a v-bind:href="'/graph' + '?channelId=' + channel.id + '&accessKey=' + channel.accessKey">
+              {{channel.name}}
+            </a>
           </td>
           <td>{{channel.accessKey}}</td>
           <td><a v-on:click="() => this.delete(channel.id)">delete</a></td>

@@ -1,10 +1,13 @@
 package realtime_update
 
+import "time"
+
 type Payload struct {
-	ChannelOne   float64 `json:"channelOne"`
-	ChannelTwo   float64 `json:"channelTwo"`
-	ChannelThree float64 `json:"channelThree"`
-	ChannelFour  float64 `json:"channelFour"`
+	ChannelOne   float64   `json:"channelOne"`
+	ChannelTwo   float64   `json:"channelTwo"`
+	ChannelThree float64   `json:"channelThree"`
+	ChannelFour  float64   `json:"channelFour"`
+	Timestamp    time.Time `json:"timestamp"`
 }
 
 type Message struct {

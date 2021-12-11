@@ -1,0 +1,5 @@
+timescale
+.env
+tmp
+.idea
+cmd/server/tmp

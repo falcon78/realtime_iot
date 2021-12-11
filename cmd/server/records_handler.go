@@ -7,13 +7,18 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func (a *app) getLatestRecords(c echo.Context) error {
 	channelId, _ := strconv.Atoi(c.Param("channelId"))
+	limit, err := strconv.Atoi(c.QueryParam("limit"))
+	if err != nil {
+		limit = 100
+	}
 
 	repo := repository.NewRepository(a.db)
-	records, err := repo.GetAllRecordsByChannelId(channelId)
+	records, err := repo.GetAllRecordsByChannelId(channelId, limit)
 	if err != nil {
 		fmt.Println(err)
 		return echo.NewHTTPError(
@@ -39,8 +44,10 @@ func (a *app) postRecord(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest)
 	}
 
+	current := time.Now()
+
 	repo := repository.NewRepository(a.db)
-	err := repo.AddRecord(r.AccessKey, r.ChannelOne, r.ChannelTwo, r.ChannelThree, r.ChannelFour)
+	err := repo.AddRecord(r.AccessKey, r.ChannelOne, r.ChannelTwo, r.ChannelThree, r.ChannelFour, current)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError)
 	}
@@ -52,6 +59,7 @@ func (a *app) postRecord(c echo.Context) error {
 			ChannelTwo:   r.ChannelTwo,
 			ChannelThree: r.ChannelThree,
 			ChannelFour:  r.ChannelFour,
+			Timestamp:    current,
 		},
 	}
 
