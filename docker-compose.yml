@@ -9,7 +9,7 @@ services:
     volumes:
       - ./timescale:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
     restart: unless-stopped
 
   realtime_iot:
@@ -21,7 +21,7 @@ services:
     volumes:
       - .:/realtime_iot
     ports:
-      - 31415:31415
+      - "31415:31415"
     depends_on:
       - iot_pg
 

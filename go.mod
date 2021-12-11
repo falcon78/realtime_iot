@@ -4,6 +4,8 @@ go 1.16
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.15.1
+	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/now v1.1.3 // indirect
 	github.com/labstack/echo/v4 v4.6.1
 	gorm.io/driver/postgres v1.2.2

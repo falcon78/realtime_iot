@@ -7,7 +7,7 @@ RUN apk add alpine-sdk bash git --no-cache \
     && git clone https://github.com/vishnubob/wait-for-it.git /tmp/wait-for-it \
     && mv /tmp/wait-for-it/wait-for-it.sh /usr/local/bin/
 
-WORKDIR /realtime_iot
+WORKDIR /realtime_iot/cmd/server
 
 RUN go get -u github.com/cosmtrek/air
 

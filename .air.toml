@@ -1,4 +1,0 @@
-[build]
-cmd = "go build -o ./tmp/main ."
-bin = "tmp/main"
-exclude_dir = ["static", "tmp", "timescale", "migrations"]

@@ -1,7 +1,7 @@
 package models
 
 type Channel struct {
-	Id        int
-	Name      string
-	AccessKey string
+	Id        int    `json:"id"`
+	Name      string `json:"name"`
+	AccessKey string `json:"accessKey"`
 }
