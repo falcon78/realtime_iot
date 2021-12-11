@@ -42,7 +42,7 @@ func main() {
 	e.DELETE("/api/channel/delete/:channelId", app.deleteChannel, basicAuth())
 	e.GET("/api/records/:channelId", app.getLatestRecords, basicAuth())
 	// don't use basic auth for this route
-	e.POST("/api/record", app.postRecord, bodyDump())
+	e.POST("/api/record", app.postRecord)
 
 	// websocket
 	e.GET("/ws/:accessKey", app.handleWebsocket)
