@@ -13,7 +13,6 @@ WORKDIR /realtime_iot/cmd/server
 
 RUN go get -u github.com/cosmtrek/air
 
-CMD tail -f /dev/null
-
+CMD ["sh", "-c", "wait-for-it.sh iot_pg:5432 -t 20 --strict -- go run ."]
 
 EXPOSE 31415

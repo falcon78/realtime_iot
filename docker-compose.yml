@@ -15,7 +15,7 @@ services:
   realtime_iot:
     build: .
     container_name: realtime_iot
-    command: wait-for-it.sh iot_pg:5432 -t 20 --strict -- air -c .air.toml
+#    command: wait-for-it.sh iot_pg:5432 -t 20 --strict -- air -c .air.toml
     env_file:
       - .env
     volumes:
