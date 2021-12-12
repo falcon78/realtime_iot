@@ -17,6 +17,14 @@ func (r *Repo) GetAllRecordsByChannelId(channelId int, limit int) (*AllRecordsRe
 		return nil, err
 	}
 
+	if len(records) == 0 {
+		return &AllRecordsResponse{
+			Min:     0,
+			Max:     0,
+			Records: &records,
+		}, nil
+	}
+
 	var max float64
 	var min float64
 
