@@ -4,7 +4,7 @@ let bar_chart = null
 
 const currentScheme = String(window.location).split(":")[0]
 
-let websocketHost = currentScheme === "https" ? "wss://" : "ws://" + window.location.hostname
+let websocketHost = (currentScheme === "https" ? "wss://" : "ws://") + window.location.hostname
 if (window.location.port.length > 0) {
     websocketHost += ":" + window.location.port
 }
