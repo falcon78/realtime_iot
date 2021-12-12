@@ -2,7 +2,9 @@ const MAX_DATA_NUMS = 100
 
 let bar_chart = null
 
-let websocketHost = window.location.hostname
+const currentScheme = String(window.location).split(":")[0]
+
+let websocketHost = currentScheme === "https" ? "wss://" : "ws://" + window.location.hostname
 if (window.location.port.length > 0) {
     websocketHost += ":" + window.location.port
 }
@@ -31,7 +33,7 @@ export default {
     async mounted() {
         const accessKey = new URL(window.location).searchParams.get("accessKey")
 
-        const socket = new WebSocket(`ws://${websocketHost}/ws/${accessKey}`)
+        const socket = new WebSocket(`${websocketHost}/ws/${accessKey}`)
         const response = await getGraphData(channelId)
 
         let channelData = {
