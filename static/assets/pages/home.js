@@ -79,6 +79,7 @@ export default {
         <tr>
           <th>名前</th>
           <th>アクセスキー</th>
+          <th>削除</th>
         </tr>
         </thead>
         <tbody>
