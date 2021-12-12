@@ -2,15 +2,13 @@ package main
 
 import (
 	"github.com/falcon78/realtime_iot/pkg/realtime_update"
-	"os"
-	"time"
-
 	"github.com/falcon78/realtime_iot/pkg/utils"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"os"
 )
 
 var MigrationDir = "file://../../migrations"
@@ -49,31 +47,11 @@ func main() {
 
 	// Serve static assets for frontend
 	e.Static("/assets", "../../static/assets")
-	e.File("/*", "../../static/index.html")
+	e.File("/*", "../../static/index.html", basicAuth())
 
-	timer := time.NewTicker(time.Second)
-
-	dummyBroadcast := func() {
-		for {
-			select {
-			case <-timer.C:
-				message := realtime_update.Message{
-					AccessKey: "channel",
-					Payload: &realtime_update.Payload{
-						ChannelOne:   0,
-						ChannelTwo:   0,
-						ChannelThree: 0,
-						ChannelFour:  0,
-					},
-				}
-				app.hub.Broadcast <- &message
-			}
-		}
-	}
-
-	go dummyBroadcast()
+	// Start Websocket data broadcasting
 	go app.hub.Listen()
 
-	// Start server
+	// Start http server
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }

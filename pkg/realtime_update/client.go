@@ -23,24 +23,26 @@ type Client struct {
 
 func (c *Client) WritePump(h *Hub, channelName string) {
 	ticker := time.NewTicker(pingPeriod)
+
 	defer func() {
 		ticker.Stop()
 		h.Unregister <- &SubscriptionType{
 			ChannelName: channelName,
 			Client:      c,
 		}
-		c.Conn.Close()
-		fmt.Println("conn closeed")
+		_ = c.Conn.Close()
+		fmt.Println("conn closed")
 	}()
+
 	for {
 		select {
 		case message, ok := <-c.Send:
+
 			if err := c.Conn.SetWriteDeadline(time.Now().Add(writeWait)); err != nil {
 				return
 			}
 			if !ok {
-				// The hub closed the channel.
-				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				_ = c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 
@@ -61,8 +63,9 @@ func (c *Client) WritePump(h *Hub, channelName string) {
 			if err := w.Close(); err != nil {
 				return
 			}
+
 		case <-ticker.C:
-			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			_ = c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}

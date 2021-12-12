@@ -73,14 +73,6 @@ export default {
                 normalized: false,
                 lineTension: 1,
                 scales: {
-                    // yAxes: [
-                    //     {
-                    //         ticks: {
-                    //             beginAtZero: true,
-                    //             padding: 0
-                    //         }
-                    //     }
-                    // ],
                     yAxes: [{
                         display: true,
                         ticks: {
@@ -94,8 +86,6 @@ export default {
                     xAxes: [{
                         type: 'time',
                         time: {
-                            // parser: timeFormat,
-                            // round: 'day'
                             tooltipFormat: 'YYYY-MM-DD HH:mm',
                             displayFormats: {
                                 millisecond: 'HH:mm:ss',
@@ -124,7 +114,6 @@ export default {
         })
         socket.addEventListener('message', async (event) => {
             const data = JSON.parse(await event.data.text())
-            console.log(data)
 
             bar_chart.data.datasets[0].data.push(data.channelOne)
             bar_chart.data.datasets[1].data.push(data.channelTwo)
@@ -142,21 +131,6 @@ export default {
 
             bar_chart.update()
         })
-
-
-        // setInterval(() => {
-        //     bar_chart.data.datasets[0].data.push(math.random() * 200)
-        //     // bar_chart.data.datasets[1].data.push(math.random() * 200)
-        //     bar_chart.data.labels.push(("data" + Math.random().toString()).substr(0, 10))
-        //
-        //     if (bar_chart.data.datasets[0].data.length > MAX_DATA_NUMS) {
-        //         bar_chart.data.datasets[0].data.shift()
-        //         // bar_chart.data.datasets[1].data.shift()
-        //         bar_chart.data.labels.shift()
-        //     }
-        //
-        //     bar_chart.update()
-        // }, 500)
     },
 
     template: `

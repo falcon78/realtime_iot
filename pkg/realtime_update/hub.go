@@ -40,20 +40,25 @@ func (h *Hub) Listen() {
 	for {
 		select {
 		case subscription := <-h.Register:
+
 			channelSubscription, ok := h.Subscriptions[subscription.ChannelName]
 			if !ok {
 				h.Subscriptions[subscription.ChannelName] = make(map[*Client]bool)
 				channelSubscription = h.Subscriptions[subscription.ChannelName]
 			}
 			channelSubscription[subscription.Client] = true
+
 		case subscription := <-h.Unregister:
+
 			if _, ok := h.Subscriptions[subscription.ChannelName]; ok {
 				if _, ok := h.Subscriptions[subscription.ChannelName][subscription.Client]; ok {
 					delete(h.Subscriptions[subscription.ChannelName], subscription.Client)
 					close(subscription.Client.Send)
 				}
 			}
+
 		case message := <-h.Broadcast:
+
 			for client := range h.Subscriptions[message.AccessKey] {
 				select {
 				case client.Send <- message.Payload:

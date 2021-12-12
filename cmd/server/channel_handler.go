@@ -58,5 +58,4 @@ func (a *app) deleteChannel(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "Channel successfully deleted")
-
 }
