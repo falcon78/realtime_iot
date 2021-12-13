@@ -1,0 +1,7 @@
+http://iot.sujank.me {
+        redir https://{host}{uri}
+}
+
+https://iot.sujank.me {
+        reverse_proxy realtime_iot:31415
+}

@@ -1,6 +1,16 @@
 version: "3.8"
 
 services:
+  caddy:
+    image: caddy:2.4.6-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy_data:/data
+
   iot_pg:
     container_name: iot_pg
     image: timescale/timescaledb:2.5.1-pg14 

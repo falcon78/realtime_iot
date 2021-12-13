@@ -3,3 +3,4 @@ timescale
 tmp
 .idea
 */server
+caddy_data/*
