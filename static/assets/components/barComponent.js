@@ -106,7 +106,7 @@ export default {
             }
         }
 
-        const ctx = document.getElementById('planet-chart');
+        const ctx = document.getElementById('chart');
         bar_chart = new Chart(ctx, data);
         bar_chart.options.tooltips.enabled = false;
         bar_chart.options.animation = false;
@@ -137,7 +137,7 @@ export default {
 
     template: `
       <div>
-      <canvas id="planet-chart"></canvas>
+          <canvas id="chart"></canvas>
       </div>
     `,
 };
