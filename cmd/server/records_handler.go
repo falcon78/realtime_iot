@@ -98,6 +98,8 @@ func (a *app) downloadRecordCsv(c echo.Context) error {
 		})
 	}
 
+	c.Response().Header().Set(echo.HeaderContentType, "text/csv")
+
 	writer := csv.NewWriter(c.Response().Writer)
 	if err := writer.WriteAll(csvContents); err != nil {
 		return echo.NewHTTPError(
@@ -106,7 +108,7 @@ func (a *app) downloadRecordCsv(c echo.Context) error {
 		)
 	}
 
-	c.Response().Header().Set(echo.HeaderContentType, "text/csv")
 	writer.Flush()
+	c.Response().Flush()
 	return writer.Error()
 }
