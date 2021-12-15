@@ -1,1 +1,1 @@
-<img src="media/iot_realtime_video.gif" width="800">
+<img src="./iot_realtime_video.gif" width="800">
