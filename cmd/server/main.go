@@ -39,7 +39,9 @@ func main() {
 	e.POST("/api/channel/create/:channelName", app.createChannel, basicAuth())
 	e.DELETE("/api/channel/delete/:channelId", app.deleteChannel, basicAuth())
 	e.GET("/api/records/:channelId", app.getLatestRecords, basicAuth())
-	// don't use basic auth for this route
+	e.GET("/api/records/csv/:channelKey", app.downloadRecordCsv, basicAuth())
+	// don't use basic auth for this route because channel
+	// access key already acts like an authentication token
 	e.POST("/api/record", app.postRecord)
 
 	// websocket

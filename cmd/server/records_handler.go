@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/csv"
+	"errors"
 	"fmt"
 	"github.com/falcon78/realtime_iot/pkg/realtime_update"
 	"github.com/falcon78/realtime_iot/pkg/repository"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"time"
@@ -64,4 +67,46 @@ func (a *app) postRecord(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, "Added record successfully")
+}
+
+func (a *app) downloadRecordCsv(c echo.Context) error {
+	repo := repository.NewRepository(a.db)
+	records, err := repo.GetAllRecordsByChannelKey(c.Param("channelKey"))
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
+		return echo.NewHTTPError(
+			http.StatusNotFound,
+			"Channel with specified channel key not found",
+		)
+	} else if err != nil {
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			"Error occurred while fetching records from db",
+		)
+	}
+
+	csvContents := [][]string{
+		{"timestamp", "channel1", "channel2", "channel3", "channel4"},
+	}
+
+	for _, r := range records {
+		csvContents = append(csvContents, []string{
+			r.Timestamp.String(),
+			strconv.FormatFloat(r.ChannelOne, 'f', -1, 64),
+			strconv.FormatFloat(r.ChannelTwo, 'f', -1, 64),
+			strconv.FormatFloat(r.ChannelThree, 'f', -1, 64),
+			strconv.FormatFloat(r.ChannelFour, 'f', -1, 64),
+		})
+	}
+
+	writer := csv.NewWriter(c.Response().Writer)
+	if err := writer.WriteAll(csvContents); err != nil {
+		return echo.NewHTTPError(
+			http.StatusInternalServerError,
+			"Error occurred while writing data to csv",
+		)
+	}
+
+	c.Response().Header().Set(echo.HeaderContentType, "text/csv")
+	writer.Flush()
+	return writer.Error()
 }

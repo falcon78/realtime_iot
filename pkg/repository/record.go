@@ -65,6 +65,21 @@ func (r *Repo) GetAllRecordsByChannelId(channelId int, limit int) (*AllRecordsRe
 	}, nil
 }
 
+func (r *Repo) GetAllRecordsByChannelKey(key string) ([]*models.Record, error) {
+	channel, err := r.GetChannelByAccessKey(key)
+	if err != nil {
+		return nil, err
+	}
+
+	var records []*models.Record
+	err = r.DB.Find(&records, "channel_id = ?", channel.Id).Error
+	if err != nil {
+		return records, err
+	}
+
+	return records, nil
+}
+
 func (r *Repo) DeleteRecordsByChannelId(channelId int) error {
 	return r.DB.Where("channel_id = ?", channelId).Delete(&models.Record{}).Error
 }
