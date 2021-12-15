@@ -108,7 +108,6 @@ func (a *app) downloadRecordCsv(c echo.Context) error {
 		)
 	}
 
-	writer.Flush()
 	c.Response().Flush()
 	return writer.Error()
 }
